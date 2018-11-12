@@ -9,5 +9,9 @@ const Api = () => axios.create({
 export default {
   riskTypes: {
     all: () => Api().get('/risk_types/'),
+    get: id => Api().get(`/risk_types/${id}/`),
+  },
+  risks: {
+    create: payload => Api().post('/risks/', payload),
   },
 };
