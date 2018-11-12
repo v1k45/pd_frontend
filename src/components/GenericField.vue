@@ -3,7 +3,8 @@
     <label class="label">
       {{ schema.name }}
     </label>
-    <div class="control">
+    <p v-if="readonly">{{ value }}</p>
+    <div class="control" v-else>
       <input class="input" :class="{'is-danger': error}" type="text" v-model="value">
     </div>
     <p class="help is-danger" v-if="error">{{ error }}</p>
@@ -13,8 +14,9 @@
     <label class="label">
       {{ schema.name }}
     </label>
-    <div class="control">
-      <input class="input"  :class="{'is-danger': error}" type="text" v-model="value">
+    <p v-if="readonly">{{ value }}</p>
+    <div class="control" v-else>
+      <input class="input" :class="{'is-danger': error}" type="text" v-model="value">
     </div>
     <p class="help is-danger" v-if="error">{{ error }}</p>
   </div>
@@ -23,7 +25,9 @@
     <label class="label">
       {{ schema.name }}
     </label>
+    <p v-if="readonly">{{ dateValue }}</p>
     <Datepicker
+      v-else
       wrapper-class="control"
       v-bind:input-class="{ input: schema, 'is-danger': error }"
       v-model="value">
@@ -35,7 +39,10 @@
     <label class="label">
       {{ schema.name }}
     </label>
-    <div class="select" :class="{'is-danger': error}">
+    <p v-if="readonly">
+      {{ optionValue }}
+    </p>
+    <div v-else class="select" :class="{'is-danger': error}">
       <select v-model="value">
         <option disabled value="">Select a {{ schema.name }}</option>
         <option v-for="optionValue in schema.options" :value="optionValue.id" :key="optionValue.id">
@@ -55,7 +62,7 @@ export default {
   components: {
     Datepicker,
   },
-  props: ['schema', 'error'],
+  props: ['schema', 'error', 'readonly'],
   computed: {
     // getter and setter for form value
     value: {
@@ -69,6 +76,12 @@ export default {
           { fieldId: this.schema.id, value: this.cleanValue(value) },
         );
       },
+    },
+    optionValue: function() {
+      return this.schema.options.find(o => o.id === this.schema.value).value;
+    },
+    dateValue: function() {
+      return new Date(this.schema.value).toLocaleDateString();
     },
   },
   methods: {

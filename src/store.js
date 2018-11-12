@@ -13,6 +13,7 @@ export default new Vuex.Store({
       fields: [],
       _isLoaded: false,
     },
+    risks: [],
     // risk item which is being edited or viewed
     selectedRisk: {
       risk_type: null,
@@ -45,6 +46,20 @@ export default new Vuex.Store({
         errors: {values: []},
       };
     },
+    setRisks(state, risks) {
+      state.risks = [...risks];
+    },
+    setSelectedRisk(state, risk) {
+      // load selected risk into store
+      state.selectedRisk = {
+        ...risk,
+        values: risk.values.map(value => {
+          return {...value.field, value: value.value};
+        }),
+        _isLoaded: true,
+        errors: {values: []},
+      };
+    },
     resetSelectedRiskType(state) {
       state.selectedRiskType = { fields: [], _isLoaded: false, errors: {} };
     },
@@ -69,8 +84,15 @@ export default new Vuex.Store({
         const response = await Api.riskTypes.get(id);
         riskType = response.data;
       }
-
       commit('setSelectedRiskType', riskType);
+    },
+    async getRisks({ commit }) {
+      const response = await Api.risks.all();
+      commit('setRisks', response.data);
+    },
+    async getRisk({ commit }, id) {
+      const response = await Api.risks.get(id);
+      commit('setSelectedRisk', response.data);
     },
     submitRisk({ state, commit }) {
       // create list of values compatible with the API

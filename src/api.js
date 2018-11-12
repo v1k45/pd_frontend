@@ -13,5 +13,7 @@ export default {
   },
   risks: {
     create: payload => Api().post('/risks/', payload),
+    all: () => Api().get('/risks/'),
+    get: id => Api().get(`/risks/${id}/`),
   },
 };
