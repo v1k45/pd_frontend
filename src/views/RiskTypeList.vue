@@ -16,6 +16,7 @@
 
 <script>
 import RiskTypeItem from '@/components/RiskTypeItem.vue';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'risk-type-list',
@@ -24,16 +25,17 @@ export default {
   },
   computed: {
     riskTypes() {
-      return [
-        { id: 1, name: 'Cars' },
-        { id: 2, name: 'Lottery' },
-      ];
+      return this.$store.state.riskTypes;
     },
   },
   methods: {
+    ...mapActions([
+      'getRiskTypes',
+    ]),
   },
   created() {
     document.title = 'Risk Types';
+    this.getRiskTypes();
   },
 };
 </script>
