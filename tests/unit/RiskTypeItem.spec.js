@@ -9,6 +9,7 @@ describe('RiskTypeItem.vue', () => {
       { id: 2, name: 'Item 2', description: 'Description 2' },
     ];
     const wrapper = shallowMount(RiskTypeItem, {
+      stubs: ['router-link', 'router-view'],
       propsData: { items },
     });
 
