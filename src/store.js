@@ -16,10 +16,13 @@ export default new Vuex.Store({
     risks: [],
     // risk item which is being edited or viewed
     selectedRisk: {
-      _isLoaded: false,
       risk_type: null,
       values: [],
       errors: {values: []},
+
+      _isLoaded: false,
+      _isSubmitting: false,
+      _isSaved: false,
     },
   },
   getters: {
@@ -58,6 +61,8 @@ export default new Vuex.Store({
           return {...value.field, id: value.id, field_id: value.field_id, value: value.value};
         }),
         _isLoaded: true,
+        _isSubmitting: false,
+        _isSaved: false,
         errors: {values: []},
       };
     },
@@ -70,8 +75,14 @@ export default new Vuex.Store({
       const newField = { ...state.selectedRisk.values[oldFieldIdx], value };
       state.selectedRisk.values.splice(oldFieldIdx, 1, newField);
     },
+    setSelectedRiskSubmitting(state) {
+      state.selectedRisk = {...state.selectedRisk, _isSubmitting: true, _isSaved: false};
+    },
+    setSelectedRiskSubmitted(state) {
+      state.selectedRisk = {...state.selectedRisk, _isSubmitting: false, _isSaved: true};
+    },
     setRiskError(state, errors) {
-      state.selectedRisk.errors = {...errors};
+      state.selectedRisk = {...state.selectedRisk, errors, _isSubmitting: false, _isSaved: false};
     },
   },
   actions: {
@@ -103,11 +114,13 @@ export default new Vuex.Store({
       // final payload for creating risk object
       let payload = {risk_type: state.selectedRisk.risk_type, values};
 
+      commit('setSelectedRiskSubmitting')
+
       // send payload to API
       Api.risks.create(payload)
         .then(response => {
-          // TODO: redirect to saved risk or show success response
-          console.log("Successfully created");
+          commit('setSelectedRisk', response.data)
+          commit('setSelectedRiskSubmitted')
         })
         .catch(error => {
           // there was a validation error, show it to user

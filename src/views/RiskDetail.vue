@@ -1,5 +1,5 @@
 <template>
-  <section class="section" v-if="risk._isLoaded">
+  <section v-if="risk._isLoaded">
     <div class="hero">
       <div class="hero-body">
         <div class="container">

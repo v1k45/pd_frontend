@@ -1,5 +1,5 @@
 <template>
-  <section class="section" v-if="riskType._isLoaded">
+  <section v-if="riskType._isLoaded">
     <div class="hero">
       <div class="hero-body">
         <div class="container">
@@ -11,13 +11,13 @@
     <div class="container">
       <div class="columns" :key="field.id" v-for="(field, idx) in risk.values">
         <div class="column is-half">
-            <generic-field :error="getError(idx)" :schema="field"></generic-field>
+          <generic-field :disabled="risk._isSubmitting" :error="getError(idx)" :schema="field"></generic-field>
         </div>
       </div>
       <div class="columns">
         <div class="column is-half">
           <div class="control">
-            <button class="button is-primary" @click="submitRisk">
+            <button class="button is-primary" :class="{'is-loading': risk._isSubmitting}" @click="submitRisk">
               Submit
             </button>
           </div>
@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'riskType', 'risk', 'getError',
+      'riskType', 'getError', 'risk'
     ]),
   },
   watch: {
@@ -48,6 +48,12 @@ export default {
         document.title = `Add Risk for ${newRiskType.name}`;
       }
     },
+    risk(newRisk, oldRisk) {
+      // redirect to the risk page if the risk object was saved successfully
+      if (!oldRisk._isSaved && newRisk._isSaved) {
+        this.$router.push({ name: 'view-risk', params: {id: newRisk.id}});
+      }
+    }
   },
   methods: {
     ...mapActions([

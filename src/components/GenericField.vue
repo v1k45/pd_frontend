@@ -5,7 +5,7 @@
     </label>
     <p v-if="readonly">{{ value }}</p>
     <div class="control" v-else>
-      <input class="input" :class="{'is-danger': error}" type="text" v-model="value">
+      <input class="input" :class="{'is-danger': error}" type="text" v-model="value" :disabled="disabled">
     </div>
     <p class="help is-danger" v-if="error">{{ error }}</p>
   </div>
@@ -16,7 +16,7 @@
     </label>
     <p v-if="readonly">{{ value }}</p>
     <div class="control" v-else>
-      <input class="input" :class="{'is-danger': error}" type="text" v-model="value">
+      <input class="input" :class="{'is-danger': error}" type="text" v-model="value" :disabled="disabled">
     </div>
     <p class="help is-danger" v-if="error">{{ error }}</p>
   </div>
@@ -30,6 +30,7 @@
       v-else
       wrapper-class="control"
       v-bind:input-class="{ input: schema, 'is-danger': error }"
+      :disabled="disabled"
       v-model="value">
     </Datepicker>
     <p class="help is-danger" v-if="error">{{ error }}</p>
@@ -43,7 +44,7 @@
       {{ optionValue }}
     </p>
     <div v-else class="select" :class="{'is-danger': error}">
-      <select v-model="value">
+      <select v-model="value" :disabled="disabled">
         <option disabled value="">Select a {{ schema.name }}</option>
         <option v-for="optionValue in schema.options" :value="optionValue.id" :key="optionValue.id">
           {{ optionValue.value }}
@@ -62,7 +63,7 @@ export default {
   components: {
     Datepicker,
   },
-  props: ['schema', 'error', 'readonly'],
+  props: ['schema', 'error', 'readonly', 'disabled'],
   computed: {
     // getter and setter for form value
     value: {
