@@ -25,17 +25,19 @@
       </div>
     </div>
   </section>
+  <loading v-else />
 </template>
 
 <script>
 
 import { mapActions, mapGetters } from 'vuex';
 import GenericField from '@/components/GenericField.vue';
+import Loading from '@/components/Loading.vue';
 
 export default {
   name: 'add-risk',
   components: {
-    GenericField,
+    GenericField, Loading
   },
   computed: {
     ...mapGetters([

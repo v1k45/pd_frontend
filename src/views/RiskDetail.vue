@@ -15,17 +15,19 @@
       </div>
     </div>
   </section>
+  <loading v-else />
 </template>
 
 <script>
 
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import GenericField from '@/components/GenericField.vue';
+import Loading from '@/components/Loading.vue';
 
 export default {
   name: 'add-risk',
   components: {
-    GenericField,
+    GenericField, Loading
   },
   computed: {
     ...mapGetters([
@@ -36,10 +38,16 @@ export default {
     ...mapActions([
       'getRisk',
     ]),
+    ...mapMutations([
+      'resetSelectedRisk'
+    ])
   },
   created() {
     this.getRisk(this.$route.params.id);
     document.title = 'View Risk';
   },
+  destroyed() {
+    this.resetSelectedRisk();
+  }
 };
 </script>

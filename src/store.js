@@ -67,7 +67,10 @@ export default new Vuex.Store({
       };
     },
     resetSelectedRiskType(state) {
-      state.selectedRiskType = { fields: [], _isLoaded: false, errors: {} };
+      state.selectedRiskType = { fields: [], _isLoaded: false };
+    },
+    resetSelectedRisk(state) {
+      state.selectedRisk = { values: [], _isLoaded: false, errors: {} };
     },
     updateField(state, { fieldId, value }) {
       // update field value by id
@@ -91,12 +94,8 @@ export default new Vuex.Store({
       commit('setRiskTypes', response.data);
     },
     async getRiskType({ state, commit }, id) {
-      let riskType = state.riskTypes.find(r => r === id);
-      if (!riskType) {
-        const response = await Api.riskTypes.get(id);
-        riskType = response.data;
-      }
-      commit('setSelectedRiskType', riskType);
+      const response = await Api.riskTypes.get(id);
+      commit('setSelectedRiskType', response.data);
     },
     async getRisks({ commit }) {
       const response = await Api.risks.all();
