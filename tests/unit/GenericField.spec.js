@@ -4,6 +4,7 @@ import GenericField from '@/components/GenericField.vue';
 
 
 describe('GenericField.vue', () => {
+
   it('renders text field correctly', () => {
     const schema = {
       id: 1,
@@ -82,6 +83,45 @@ describe('GenericField.vue', () => {
     const wrapperHtml = wrapper.html();
     expect(wrapper.contains(Datepicker)).toBe(true);
     expect(wrapper.vm.value).toBe('1970-01-01');
+  });
+
+  it('renders text instead of input for readonly field correctly', () => {
+    const schema = {
+      id: 1,
+      field_type: 'text',
+      value: 'Text Value',
+    }
+    const error = null;
+    const wrapper = shallowMount(GenericField, {
+      propsData: { schema, error, readonly: true },
+    });
+
+    const wrapperHtml = wrapper.html();
+
+    expect(wrapper.contains('input')).toBe(false);
+    expect(wrapper.contains('p')).toBe(true);
+    expect(wrapper.find('p').html()).toContain('Text Value');
+
+  });
+
+  it('renders field errors correctly', () => {
+    const schema = {
+      id: 1,
+      field_type: 'text',
+      value: 'Text Value',
+    }
+    const error = 'This field is required.';
+    const wrapper = shallowMount(GenericField, {
+      propsData: { schema, error, readonly: false },
+    });
+
+    const wrapperHtml = wrapper.html();
+
+    expect(wrapper.contains('input')).toBe(true);
+    expect(wrapper.find('input').attributes('class')).toBe('input is-danger');
+    expect(wrapper.contains('p.is-danger')).toBe(true);
+    expect(wrapper.find('p.is-danger').html()).toContain('This field is required.');
+
   });
 
 });

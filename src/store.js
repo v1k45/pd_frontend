@@ -16,6 +16,7 @@ export default new Vuex.Store({
     risks: [],
     // risk item which is being edited or viewed
     selectedRisk: {
+      _isLoaded: false,
       risk_type: null,
       values: [],
       errors: {values: []},
@@ -54,7 +55,7 @@ export default new Vuex.Store({
       state.selectedRisk = {
         ...risk,
         values: risk.values.map(value => {
-          return {...value.field, value: value.value};
+          return {...value.field, id: value.id, field_id: value.field_id, value: value.value};
         }),
         _isLoaded: true,
         errors: {values: []},
